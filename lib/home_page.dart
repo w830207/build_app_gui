@@ -17,13 +17,14 @@ class HomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text("如：/Users/wangchenbo/StudioProjects/lilian_yabo"),
+            const SelectableText(
+                "請輸入專案目錄地址，如：/Users/wangchenbo/StudioProjects/lilian_yabo"),
             TextField(controller: myController),
             OutlinedButton(
               child: const Text('去打包'),
               onPressed: () {
                 Get.to(() => BuildPage(
-                      app_dir: myController.text,
+                      appDir: myController.text,
                     ));
               },
             ),
