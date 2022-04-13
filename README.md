@@ -1,3 +1,3 @@
 
-## lilian ANT用打包 打包gui
+## lilian ANT用打包gui Mac desktop
 
