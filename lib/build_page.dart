@@ -36,11 +36,6 @@ class BuildPage extends StatelessWidget {
               children: <Widget>[
                 TextButton(
                     onPressed: () {
-                      debugPrint('statement');
-                    },
-                    child: const Text('debugPrint')),
-                TextButton(
-                    onPressed: () {
                       controller.translate(appDir);
                     },
                     child: const Text("點擊翻譯")),
