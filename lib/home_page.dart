@@ -11,7 +11,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("請輸入專案目錄地址"),
+        title: const Text("請輸入專案目錄地址"),
       ),
       body: Center(
         child: Column(
@@ -21,10 +21,20 @@ class HomePage extends StatelessWidget {
                 "請輸入專案目錄地址，如：/Users/wangchenbo/StudioProjects/lilian_yabo"),
             TextField(controller: myController),
             OutlinedButton(
-              child: const Text('去打包'),
+              child: const Text('去打包UAT'),
               onPressed: () {
                 Get.to(() => BuildPage(
                       appDir: myController.text,
+                      env: "UAT",
+                    ));
+              },
+            ),
+            OutlinedButton(
+              child: const Text('去打包PROD'),
+              onPressed: () {
+                Get.to(() => BuildPage(
+                      appDir: myController.text,
+                      env: "PROD",
                     ));
               },
             ),
