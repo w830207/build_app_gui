@@ -99,22 +99,23 @@ echo "\033[0;32m✔\033[0m 寫入APK金鑰"
     shell = Shell(workingDirectory: appDir);
 
     String folder = env.toLowerCase();
+    String ENV = env == "PROD" ? "PROD" : "DEV";
 
     for (var i in alphabet) {
       //打包
       showingLog.value += "打包渠道$i APK v1v2...\n";
       await shell.run('''
-flutter build apk --dart-define=ENVIRONMENT=$env --dart-define=CHANNEL=02399$i --flavor=v1 --release 
+flutter build apk --dart-define=ENVIRONMENT=$ENV --dart-define=CHANNEL=02399$i --flavor=v1 --release 
 echo "\033[0;32m✔\033[0m APK v1 shema build Success"
-flutter build apk --dart-define=ENVIRONMENT=$env --dart-define=CHANNEL=02399$i --flavor=v2 --release
+flutter build apk --dart-define=ENVIRONMENT=$ENV --dart-define=CHANNEL=02399$i --flavor=v2 --release
 echo "\033[0;32m✔\033[0m APK v2 shema build Success"
-flutter build ios --no-codesign --dart-define=ENVIRONMENT=$env --dart-define=CHANNEL=02399$i --release
+flutter build ios --no-codesign --dart-define=ENVIRONMENT=$ENV --dart-define=CHANNEL=02399$i --release
 echo "\033[0;32m✔\033[0m IPA build Success"
     ''');
       showingLog.value += "APKv1v2打包成功\n";
       showingLog.value += "打包渠道$i IOS...\n";
       await shell.run('''
-flutter build ios --no-codesign --dart-define=ENVIRONMENT=$env --dart-define=CHANNEL=02399$i --release
+flutter build ios --no-codesign --dart-define=ENVIRONMENT=$ENV --dart-define=CHANNEL=02399$i --release
 echo "\033[0;32m✔\033[0m IPA build Success"
     ''');
       showingLog.value += "IOS打包成功\n";
@@ -166,15 +167,16 @@ echo "\033[0;32m✔\033[0m 檔案搬移"
     );
 
     String folder = env.toLowerCase();
+    String ENV = env == "PROD" ? "PROD" : "DEV";
 
     if (isAndroid.value) {
       for (var i in alphabet) {
         //打包
         showingLog.value += "打包渠道$i APK v1v2...\n";
         await shell.run('''
-flutter build apk --dart-define=ENVIRONMENT=$env --dart-define=CHANNEL=02399$i --flavor=v1 --release 
+flutter build apk --dart-define=ENVIRONMENT=$ENV --dart-define=CHANNEL=02399$i --flavor=v1 --release 
 echo "\033[0;32m✔\033[0m APK v1 shema build Success"
-flutter build apk --dart-define=ENVIRONMENT=$env --dart-define=CHANNEL=02399$i --flavor=v2 --release
+flutter build apk --dart-define=ENVIRONMENT=$ENV --dart-define=CHANNEL=02399$i --flavor=v2 --release
 echo "\033[0;32m✔\033[0m APK v2 shema build Success"
     ''');
         showingLog.value += "APKv1v2打包成功\n";
@@ -202,7 +204,7 @@ echo "\033[0;32m✔\033[0m 檔案搬移"
         //打包
         showingLog.value += "打包渠道$i IOS...\n";
         await shell.run('''
-flutter build ios --no-codesign --dart-define=ENVIRONMENT=$env --dart-define=CHANNEL=02399$i --release
+flutter build ios --no-codesign --dart-define=ENVIRONMENT=$ENV --dart-define=CHANNEL=02399$i --release
 echo "\033[0;32m✔\033[0m IPA build Success"
     ''');
         showingLog.value += "IOS打包成功\n";
@@ -254,14 +256,15 @@ echo "\033[0;32m✔\033[0m 檔案搬移"
     );
 
     String folder = env.toLowerCase();
+    String ENV = env == "PROD" ? "PROD" : "DEV";
 
     if (isAndroid.value) {
       //打包
       showingLog.value += "打包渠道$i APK v1v2...\n";
       await shell.run('''
-flutter build apk --dart-define=ENVIRONMENT=$env --dart-define=CHANNEL=02399$i --flavor=v1 --release 
+flutter build apk --dart-define=ENVIRONMENT=$ENV --dart-define=CHANNEL=02399$i --flavor=v1 --release 
 echo "\033[0;32m✔\033[0m APK v1 shema build Success"
-flutter build apk --dart-define=ENVIRONMENT=$env --dart-define=CHANNEL=02399$i --flavor=v2 --release
+flutter build apk --dart-define=ENVIRONMENT=$ENV --dart-define=CHANNEL=02399$i --flavor=v2 --release
 echo "\033[0;32m✔\033[0m APK v2 shema build Success"
     ''');
       showingLog.value += "APKv1v2打包成功\n";
@@ -287,7 +290,7 @@ echo "\033[0;32m✔\033[0m 檔案搬移"
       //打包
       showingLog.value += "打包渠道$i IOS...\n";
       await shell.run('''
-flutter build ios --no-codesign --dart-define=ENVIRONMENT=$env --dart-define=CHANNEL=02399$i --release
+flutter build ios --no-codesign --dart-define=ENVIRONMENT=$ENV --dart-define=CHANNEL=02399$i --release
 echo "\033[0;32m✔\033[0m IPA build Success"
     ''');
       showingLog.value += "IOS打包成功\n";
