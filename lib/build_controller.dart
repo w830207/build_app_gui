@@ -67,9 +67,10 @@ class BuildController extends GetxController {
     await shell.run('npm install');
 
     showingLog.value += "翻譯轉換...\n";
-    await shell.run('npm install');
+    await shell.run('npm run convert');
 
     shell = shell.popd();
+
     showingLog.value += "搬移語系檔案\n";
     await shell.run('''
 rm -rf ./lib/core/values/languages/from/zh_CN

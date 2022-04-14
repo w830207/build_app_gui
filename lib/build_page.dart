@@ -15,7 +15,7 @@ class BuildPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("打包"),
+        title: Text("$env打包"),
       ),
       body: Center(
         child: Row(
