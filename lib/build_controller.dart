@@ -105,14 +105,10 @@ echo "\033[0;32m✔\033[0m 寫入APK金鑰"
       //打包
       showingLog.value += "打包渠道$i APK v1v2...\n";
       await shell.run('''
-flutter build apk --dart-define=ENVIRONMENT=$ENV --dart-define=CHANNEL=02399$i --flavor=v1 --release 
-echo "\033[0;32m✔\033[0m APK v1 shema build Success"
 flutter build apk --dart-define=ENVIRONMENT=$ENV --dart-define=CHANNEL=02399$i --flavor=v2 --release
 echo "\033[0;32m✔\033[0m APK v2 shema build Success"
-flutter build ios --no-codesign --dart-define=ENVIRONMENT=$ENV --dart-define=CHANNEL=02399$i --release
-echo "\033[0;32m✔\033[0m IPA build Success"
     ''');
-      showingLog.value += "APKv1v2打包成功\n";
+      showingLog.value += "APKv2打包成功\n";
       showingLog.value += "打包渠道$i IOS...\n";
       await shell.run('''
 flutter build ios --no-codesign --dart-define=ENVIRONMENT=$ENV --dart-define=CHANNEL=02399$i --release
@@ -148,8 +144,7 @@ mkdir -p $appDir/publish/outputs/$folder/$i
     ''');
       shell = shell.pushd("publish/outputs/$folder/$i");
       await shell.run('''
-mv $appDir/build/app/outputs/flutter-apk/app-v1-release.apk ./app-release.apk
-mv $appDir/build/app/outputs/flutter-apk/app-v2-release.apk ./app-release-v2.apk
+mv $appDir/build/app/outputs/flutter-apk/app-v2-release.apk ./02399$i.apk
 mv $appDir/build/ios/iphoneos/Payload.ipa ./Payload.ipa
 echo "\033[0;32m✔\033[0m 檔案搬移"
     ''');
@@ -172,14 +167,12 @@ echo "\033[0;32m✔\033[0m 檔案搬移"
     if (isAndroid.value) {
       for (var i in alphabet) {
         //打包
-        showingLog.value += "打包渠道$i APK v1v2...\n";
+        showingLog.value += "打包渠道$i APK v2...\n";
         await shell.run('''
-flutter build apk --dart-define=ENVIRONMENT=$ENV --dart-define=CHANNEL=02399$i --flavor=v1 --release 
-echo "\033[0;32m✔\033[0m APK v1 shema build Success"
 flutter build apk --dart-define=ENVIRONMENT=$ENV --dart-define=CHANNEL=02399$i --flavor=v2 --release
 echo "\033[0;32m✔\033[0m APK v2 shema build Success"
     ''');
-        showingLog.value += "APKv1v2打包成功\n";
+        showingLog.value += "APKv2打包成功\n";
 
         //搬移檔案
         showingLog.value += "搬移檔案\n";
@@ -191,8 +184,7 @@ mkdir -p $appDir/publish/outputs/$folder/$i
     ''');
         shell = shell.pushd("publish/outputs/$folder/$i");
         await shell.run('''
-mv $appDir/build/app/outputs/flutter-apk/app-v1-release.apk ./app-release.apk
-mv $appDir/build/app/outputs/flutter-apk/app-v2-release.apk ./app-release-v2.apk
+mv $appDir/build/app/outputs/flutter-apk/app-v2-release.apk ./02399$i.apk
 echo "\033[0;32m✔\033[0m 檔案搬移"
     ''');
         showingLog.value += "渠道$i搬移檔案完成 $appDir/publish/outputs/$folder/$i\n";
@@ -260,14 +252,12 @@ echo "\033[0;32m✔\033[0m 檔案搬移"
 
     if (isAndroid.value) {
       //打包
-      showingLog.value += "打包渠道$i APK v1v2...\n";
+      showingLog.value += "打包渠道$i APK v2...\n";
       await shell.run('''
-flutter build apk --dart-define=ENVIRONMENT=$ENV --dart-define=CHANNEL=02399$i --flavor=v1 --release 
-echo "\033[0;32m✔\033[0m APK v1 shema build Success"
 flutter build apk --dart-define=ENVIRONMENT=$ENV --dart-define=CHANNEL=02399$i --flavor=v2 --release
 echo "\033[0;32m✔\033[0m APK v2 shema build Success"
     ''');
-      showingLog.value += "APKv1v2打包成功\n";
+      showingLog.value += "APKv2打包成功\n";
 
       //搬移檔案
       showingLog.value += "搬移檔案\n";
@@ -279,8 +269,7 @@ mkdir -p $appDir/publish/outputs/$folder/$i
     ''');
       shell = shell.pushd("publish/outputs/$folder/$i");
       await shell.run('''
-mv $appDir/build/app/outputs/flutter-apk/app-v1-release.apk ./app-release.apk
-mv $appDir/build/app/outputs/flutter-apk/app-v2-release.apk ./app-release-v2.apk
+mv $appDir/build/app/outputs/flutter-apk/app-v2-release.apk ./02399$i.apk
 echo "\033[0;32m✔\033[0m 檔案搬移"
     ''');
       showingLog.value += "渠道$i搬移檔案完成 $appDir/publish/outputs/$folder/$i\n";
