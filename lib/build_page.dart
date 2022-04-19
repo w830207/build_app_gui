@@ -54,11 +54,25 @@ class BuildPage extends StatelessWidget {
                     children: <Widget>[
                       Row(
                         children: <Widget>[
-                          const Text("Android"),
+                          const Text("AndroidV1"),
                           Checkbox(
-                            value: controller.isAndroid.value,
+                            value: controller.isAndroidV1.value,
                             onChanged: (isTapedAndroid) {
-                              controller.tapAndroid(isTapedAndroid!);
+                              controller.tapAndroidV1(isTapedAndroid!);
+                            },
+                          )
+                        ],
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      Row(
+                        children: <Widget>[
+                          const Text("AndroidV2"),
+                          Checkbox(
+                            value: controller.isAndroidV2.value,
+                            onChanged: (isTapedAndroid) {
+                              controller.tapAndroidV2(isTapedAndroid!);
                             },
                           )
                         ],
@@ -81,8 +95,9 @@ class BuildPage extends StatelessWidget {
                   );
                 }),
                 TextButton(
-                    onPressed: () => controller.singleMakeAll(appDir, env),
-                    child: const Text("單平台全渠道打包")),
+                  onPressed: () => controller.singleMakeAll(appDir, env),
+                  child: const Text("單平台全渠道打包"),
+                ),
 
                 //輸入渠道
                 SizedBox(
@@ -93,9 +108,20 @@ class BuildPage extends StatelessWidget {
                   ),
                 ),
                 TextButton(
-                    onPressed: () => controller.singleMakeOne(
-                        appDir, myController.text, env),
-                    child: const Text("單平台輸入渠道打包"))
+                  onPressed: () =>
+                      controller.singleMakeOne(appDir, myController.text, env),
+                  child: const Text("單平台輸入渠道打包"),
+                ),
+
+                // TextButton(
+                //   onPressed: () => controller.v1MakeAll(appDir, env),
+                //   child: const Text("v1全渠道打包"),
+                // ),
+                // TextButton(
+                //   onPressed: () =>
+                //       controller.v1MakeOne(appDir, myController.text, env),
+                //   child: const Text("v1輸入渠道打包"),
+                // ),
               ],
             ),
           ],
