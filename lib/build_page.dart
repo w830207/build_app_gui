@@ -8,6 +8,7 @@ class BuildPage extends StatelessWidget {
   final String appDir;
   final String env;
   final TextEditingController myController = TextEditingController();
+  final TextEditingController specialController = TextEditingController();
   final BuildController controller = Get.put(BuildController());
   RxString show = "".obs;
 
@@ -113,15 +114,24 @@ class BuildPage extends StatelessWidget {
                   child: const Text("單平台輸入渠道打包"),
                 ),
 
-                // TextButton(
-                //   onPressed: () => controller.v1MakeAll(appDir, env),
-                //   child: const Text("v1全渠道打包"),
-                // ),
-                // TextButton(
-                //   onPressed: () =>
-                //       controller.v1MakeOne(appDir, myController.text, env),
-                //   child: const Text("v1輸入渠道打包"),
-                // ),
+                //輸入渠道
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.3,
+                  child: TextField(
+                    controller: specialController,
+                    decoration: const InputDecoration(
+                        hintText: '輸入特殊渠道全名如 k6415c 其中一個'),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => controller.singleMakeSpecialOne(
+                      appDir, specialController.text, env),
+                  child: const Text("單平台輸入特殊渠道打包"),
+                ),
+                TextButton(
+                  onPressed: () => controller.singleMakeSpecialAll(appDir, env),
+                  child: const Text("單平台全特殊渠道打包"),
+                ),
               ],
             ),
           ],
