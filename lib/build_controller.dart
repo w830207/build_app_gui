@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:process_run/shell.dart';
+import 'package:flutter/services.dart';
 
 class BuildController extends GetxController {
   RxBool isAndroidV1 = true.obs;
@@ -8,12 +9,20 @@ class BuildController extends GetxController {
   RxString showingLog = "".obs;
   late Shell shell;
 
+  List pickAlphabetList(String env) {
+    if (env == "PROD") {
+      return alphabetPROD;
+    }
+    return alphabetUAT;
+  }
+
   final List alphabetUAT = [
     "a",
     "b",
   ];
 
   final List alphabetPROD = [
+    "main",
     "a",
     "b",
     "c",
@@ -40,7 +49,60 @@ class BuildController extends GetxController {
     "x",
     "y",
     "z",
-    "main",
+
+    //0522新增
+    "aa",
+    "bb",
+    "cc",
+    "dd",
+    "ee",
+    "ff",
+    "gg",
+    "hh",
+    "ii",
+    "jj",
+    "kk",
+    "ll",
+    "mm",
+    "nn",
+    "oo",
+
+    //0523新增
+    "pp",
+    "qq",
+    "rr",
+    "ss",
+    "tt",
+    "uu",
+    "vv",
+    "ww",
+    "xx",
+    "yy",
+    "zz",
+    "ab",
+    "ac",
+    "ad",
+    "ae",
+    "af",
+    "ag",
+    "ah",
+    "ai",
+    "aj",
+    "ak",
+    "al",
+    "am",
+    "an",
+    "ao",
+    "ap",
+    "aq",
+    "ar",
+    "as",
+    "at",
+    "au",
+    "av",
+    "aw",
+    "ax",
+    "ay",
   ];
 
   final List specialChannel = [
@@ -60,6 +122,27 @@ class BuildController extends GetxController {
     "al3661c",
     "al3661n",
     "as5269c",
+
+    //新的
+    "bxboon",
+    "dkoktc",
+    "kfcklgc",
+    "mdnsuuc",
+    "xoxopn",
+
+    //0529
+    "ax5678p",
+    "ax5678e",
+    "ax5678c",
+
+    //0530
+    "wp66088p",
+    "ue5885e",
+    "cc5885c",
+    "xx5885x",
+    "ni5885n",
+    "em5885m",
+    "tt5885t",
   ];
 
   @override
@@ -89,6 +172,35 @@ class BuildController extends GetxController {
       isIOS.value = true;
       isAndroidV1.value = false;
       isAndroidV2.value = false;
+    }
+  }
+
+  // ///上傳apk
+  // uploadAPK(String appDir) async {
+  //   showingLog.value = "";
+  //   String password = 'MCv@\!0Xd86\$g';
+  //   shell = Shell(workingDirectory: appDir);
+  //   shell.run(
+  //       'scp -P 55160 ./publish/outputs/uat/0/*.apk arduser@172.31.32.91:/home/lili_promote/storage/app/apk');
+  // }
+
+  copyCommend(String appDir, String env) {
+    if (env == "PROD") {
+      Clipboard.setData(ClipboardData(
+          text:
+              'scp -P 55160 $appDir/publish/outputs/prod/0/*.apk arduser@192.168.30.200:/home/ant_promote/storage/app/apk'));
+    } else {
+      Clipboard.setData(ClipboardData(
+          text:
+              "scp -P 55160 $appDir/publish/outputs/uat/0/*.apk arduser@172.31.32.91:/home/lili_promote/storage/app/apk"));
+    }
+  }
+
+  copyPassword(String appDir, String env) {
+    if (env == "PROD") {
+      Clipboard.setData(const ClipboardData(text: 'OvO@0!0Pk1*9'));
+    } else {
+      Clipboard.setData(const ClipboardData(text: "MCv@!0Xd86\$g"));
     }
   }
 
@@ -129,68 +241,68 @@ echo "\033[0;32m✔\033[0m 寫入APK金鑰"
     showingLog.value += "APK KEY完成\n";
   }
 
-  ///ipa 和 v2 apk 全渠道打包
-  bothMakeAll(String appDir, String env) async {
-    showingLog.value = "";
-
-    String folder = env.toLowerCase();
-    String ENV = env == "PROD" ? "PROD" : "DEV";
-
-    List alphabet = env == "PROD" ? alphabetPROD : alphabetUAT;
-
-    for (var i in alphabet) {
-      shell = Shell(workingDirectory: appDir);
-
-      //打包
-      showingLog.value += "打包渠道$i APK v2...\n";
-      await shell.run('''
-flutter build apk --dart-define=ENVIRONMENT=$ENV --dart-define=CHANNEL=02399$i --flavor=v2 --release
-echo "\033[0;32m✔\033[0m APK v2 shema build Success"
-    ''');
-      showingLog.value += "APKv2打包成功\n";
-      showingLog.value += "打包渠道$i IOS...\n";
-      await shell.run('''
-flutter build ios --no-codesign --dart-define=ENVIRONMENT=$ENV --dart-define=CHANNEL=02399$i --release
-echo "\033[0;32m✔\033[0m IPA build Success"
-    ''');
-      showingLog.value += "IOS打包成功\n";
-
-      showingLog.value += "製做ipa\n";
-      //製成ipa
-      shell = shell.pushd("build/ios/iphoneos");
-      await shell.run('''
-rm -rf Payload
-rm -rf Payload.ipa
-mkdir Payload
-    ''');
-      shell = shell.pushd("Payload");
-      await shell.run('ln -s ../Runner.app');
-      shell = shell.popd();
-      await shell.run('''
-zip -r Payload.ipa Payload
-echo "\033[0;32m✔\033[0m 生成IPA"
-      ''');
-      showingLog.value += "IPA製作完成\n";
-      shell = shell.popd();
-
-      //搬移檔案
-      showingLog.value += "渠道$i搬移檔案\n";
-      await shell.run('''
-mkdir -p $appDir/publish
-mkdir -p $appDir/publish/outputs
-mkdir -p $appDir/publish/outputs/$folder
-mkdir -p $appDir/publish/outputs/$folder/$i
-    ''');
-      shell = shell.pushd("publish/outputs/$folder/$i");
-      await shell.run('''
-mv $appDir/build/app/outputs/flutter-apk/app-v2-release.apk ./02399$i-v2.apk
-mv $appDir/build/ios/iphoneos/Payload.ipa ./Payload.ipa
-echo "\033[0;32m✔\033[0m 檔案搬移"
-    ''');
-      showingLog.value += "渠道$i搬移檔案完成 $appDir/publish/outputs/$folder/$i\n";
-    }
-    showingLog.value += "打包完成\n";
-  }
+//   ///ipa 和 v2 apk 全渠道打包
+//   bothMakeAll(String appDir, String env) async {
+//     showingLog.value = "";
+//
+//     String folder = env.toLowerCase();
+//     String ENV = env == "PROD" ? "PROD" : "DEV";
+//
+//     List alphabet = env == "PROD" ? alphabetPROD : alphabetUAT;
+//
+//     for (var i in alphabet) {
+//       shell = Shell(workingDirectory: appDir);
+//
+//       //打包
+//       showingLog.value += "打包渠道$i APK v2...\n";
+//       await shell.run('''
+// flutter build apk --dart-define=ENVIRONMENT=$ENV --dart-define=CHANNEL=02399$i --flavor=v2 --release
+// echo "\033[0;32m✔\033[0m APK v2 shema build Success"
+//     ''');
+//       showingLog.value += "APKv2打包成功\n";
+//       showingLog.value += "打包渠道$i IOS...\n";
+//       await shell.run('''
+// flutter build ios --no-codesign --dart-define=ENVIRONMENT=$ENV --dart-define=CHANNEL=02399$i --release
+// echo "\033[0;32m✔\033[0m IPA build Success"
+//     ''');
+//       showingLog.value += "IOS打包成功\n";
+//
+//       showingLog.value += "製做ipa\n";
+//       //製成ipa
+//       shell = shell.pushd("build/ios/iphoneos");
+//       await shell.run('''
+// rm -rf Payload
+// rm -rf Payload.ipa
+// mkdir Payload
+//     ''');
+//       shell = shell.pushd("Payload");
+//       await shell.run('ln -s ../Runner.app');
+//       shell = shell.popd();
+//       await shell.run('''
+// zip -r Payload.ipa Payload
+// echo "\033[0;32m✔\033[0m 生成IPA"
+//       ''');
+//       showingLog.value += "IPA製作完成\n";
+//       shell = shell.popd();
+//
+//       //搬移檔案
+//       showingLog.value += "渠道$i搬移檔案\n";
+//       await shell.run('''
+// mkdir -p $appDir/publish
+// mkdir -p $appDir/publish/outputs
+// mkdir -p $appDir/publish/outputs/$folder
+// mkdir -p $appDir/publish/outputs/$folder/$i
+//     ''');
+//       shell = shell.pushd("publish/outputs/$folder/$i");
+//       await shell.run('''
+// mv $appDir/build/app/outputs/flutter-apk/app-v2-release.apk ./02399$i-v2.apk
+// mv $appDir/build/ios/iphoneos/Payload.ipa ./Payload.ipa
+// echo "\033[0;32m✔\033[0m 檔案搬移"
+//     ''');
+//       showingLog.value += "渠道$i搬移檔案完成 $appDir/publish/outputs/$folder/$i\n";
+//     }
+//     showingLog.value += "打包完成\n";
+//   }
 
   ///單平台 全渠道打包
   singleMakeAll(String appDir, String env) async {
@@ -218,9 +330,9 @@ echo "\033[0;32m✔\033[0m APK v2 shema build Success"
 mkdir -p $appDir/publish
 mkdir -p $appDir/publish/outputs
 mkdir -p $appDir/publish/outputs/$folder
-mkdir -p $appDir/publish/outputs/$folder/$i
+mkdir -p $appDir/publish/outputs/$folder/0
     ''');
-        shell = shell.pushd("publish/outputs/$folder/$i");
+        shell = shell.pushd("publish/outputs/$folder/0");
 
         if (i == "main") {
           await shell.run('''
@@ -234,7 +346,7 @@ echo "\033[0;32m✔\033[0m 檔案搬移"
     ''');
         }
 
-        showingLog.value += "渠道$i搬移檔案完成 $appDir/publish/outputs/$folder/$i\n";
+        showingLog.value += "渠道$i搬移檔案完成 $appDir/publish/outputs/$folder/0\n";
       }
     }
 
@@ -255,9 +367,9 @@ echo "\033[0;32m✔\033[0m APK v1 shema build Success"
 mkdir -p $appDir/publish
 mkdir -p $appDir/publish/outputs
 mkdir -p $appDir/publish/outputs/$folder
-mkdir -p $appDir/publish/outputs/$folder/$i
+mkdir -p $appDir/publish/outputs/$folder/0
     ''');
-        shell = shell.pushd("publish/outputs/$folder/$i");
+        shell = shell.pushd("publish/outputs/$folder/0");
 
         if (i == "main") {
           await shell.run('''
@@ -271,7 +383,7 @@ echo "\033[0;32m✔\033[0m 檔案搬移"
     ''');
         }
 
-        showingLog.value += "渠道$i搬移檔案完成 $appDir/publish/outputs/$folder/$i\n";
+        showingLog.value += "渠道$i搬移檔案完成 $appDir/publish/outputs/$folder/0\n";
       }
     }
 
@@ -347,14 +459,14 @@ echo "\033[0;32m✔\033[0m APK v2 shema build Success"
 mkdir -p $appDir/publish
 mkdir -p $appDir/publish/outputs
 mkdir -p $appDir/publish/outputs/$folder
-mkdir -p $appDir/publish/outputs/$folder/$i
+mkdir -p $appDir/publish/outputs/$folder/0
     ''');
-      shell = shell.pushd("publish/outputs/$folder/$i");
+      shell = shell.pushd("publish/outputs/$folder/0");
       await shell.run('''
 mv $appDir/build/app/outputs/flutter-apk/app-v2-release.apk ./02399$i-v2.apk
 echo "\033[0;32m✔\033[0m 檔案搬移"
     ''');
-      showingLog.value += "渠道$i搬移檔案完成 $appDir/publish/outputs/$folder/$i\n";
+      showingLog.value += "渠道$i搬移檔案完成 $appDir/publish/outputs/$folder/0\n";
     }
 
     if (isAndroidV1.value) {
@@ -372,14 +484,14 @@ echo "\033[0;32m✔\033[0m APK v1 shema build Success"
 mkdir -p $appDir/publish
 mkdir -p $appDir/publish/outputs
 mkdir -p $appDir/publish/outputs/$folder
-mkdir -p $appDir/publish/outputs/$folder/$i
+mkdir -p $appDir/publish/outputs/$folder/0
     ''');
-      shell = shell.pushd("publish/outputs/$folder/$i");
+      shell = shell.pushd("publish/outputs/$folder/0");
       await shell.run('''
 mv $appDir/build/app/outputs/flutter-apk/app-v1-release.apk ./02399$i.apk
 echo "\033[0;32m✔\033[0m 檔案搬移"
     ''');
-      showingLog.value += "渠道$i搬移檔案完成 $appDir/publish/outputs/$folder/$i\n";
+      showingLog.value += "渠道$i搬移檔案完成 $appDir/publish/outputs/$folder/0\n";
     }
 
     if (isIOS.value) {
@@ -450,15 +562,14 @@ echo "\033[0;32m✔\033[0m APK v2 shema build Success"
 mkdir -p $appDir/publish
 mkdir -p $appDir/publish/outputs
 mkdir -p $appDir/publish/outputs/$folder
-mkdir -p $appDir/publish/outputs/$folder/$name
+mkdir -p $appDir/publish/outputs/$folder/0
     ''');
-      shell = shell.pushd("publish/outputs/$folder/$name");
+      shell = shell.pushd("publish/outputs/$folder/0");
       await shell.run('''
 mv $appDir/build/app/outputs/flutter-apk/app-v2-release.apk ./$name-v2.apk
 echo "\033[0;32m✔\033[0m 檔案搬移"
     ''');
-      showingLog.value +=
-          "渠道$name搬移檔案完成 $appDir/publish/outputs/$folder/$name\n";
+      showingLog.value += "渠道$name搬移檔案完成 $appDir/publish/outputs/$folder/0\n";
     }
 
     if (isAndroidV1.value) {
@@ -476,15 +587,14 @@ echo "\033[0;32m✔\033[0m APK v1 shema build Success"
 mkdir -p $appDir/publish
 mkdir -p $appDir/publish/outputs
 mkdir -p $appDir/publish/outputs/$folder
-mkdir -p $appDir/publish/outputs/$folder/$name
+mkdir -p $appDir/publish/outputs/$folder/0
     ''');
-      shell = shell.pushd("publish/outputs/$folder/$name");
+      shell = shell.pushd("publish/outputs/$folder/0");
       await shell.run('''
 mv $appDir/build/app/outputs/flutter-apk/app-v1-release.apk ./$name.apk
 echo "\033[0;32m✔\033[0m 檔案搬移"
     ''');
-      showingLog.value +=
-          "渠道$name搬移檔案完成 $appDir/publish/outputs/$folder/$name\n";
+      showingLog.value += "渠道$name搬移檔案完成 $appDir/publish/outputs/$folder/0\n";
     }
 
     if (isIOS.value) {
@@ -533,7 +643,7 @@ echo "\033[0;32m✔\033[0m 檔案搬移"
     showingLog.value += "打包完成\n";
   }
 
-  ///單平台 特殊渠道打包
+  ///單平台 特殊全渠道打包
   singleMakeSpecialAll(String appDir, String env) async {
     showingLog.value = "";
 
@@ -557,14 +667,14 @@ echo "\033[0;32m✔\033[0m APK v2 shema build Success"
 mkdir -p $appDir/publish
 mkdir -p $appDir/publish/outputs
 mkdir -p $appDir/publish/outputs/$folder
-mkdir -p $appDir/publish/outputs/$folder/$i
+mkdir -p $appDir/publish/outputs/$folder/0
     ''');
-        shell = shell.pushd("publish/outputs/$folder/$i");
+        shell = shell.pushd("publish/outputs/$folder/0");
         await shell.run('''
 mv $appDir/build/app/outputs/flutter-apk/app-v2-release.apk ./$i-v2.apk
 echo "\033[0;32m✔\033[0m 檔案搬移"
     ''');
-        showingLog.value += "渠道$i搬移檔案完成 $appDir/publish/outputs/$folder/$i\n";
+        showingLog.value += "渠道$i搬移檔案完成 $appDir/publish/outputs/$folder/0\n";
       }
     }
 
@@ -585,14 +695,14 @@ echo "\033[0;32m✔\033[0m APK v1 shema build Success"
 mkdir -p $appDir/publish
 mkdir -p $appDir/publish/outputs
 mkdir -p $appDir/publish/outputs/$folder
-mkdir -p $appDir/publish/outputs/$folder/$i
+mkdir -p $appDir/publish/outputs/$folder/0
     ''');
-        shell = shell.pushd("publish/outputs/$folder/$i");
+        shell = shell.pushd("publish/outputs/$folder/0");
         await shell.run('''
 mv $appDir/build/app/outputs/flutter-apk/app-v1-release.apk ./$i.apk
 echo "\033[0;32m✔\033[0m 檔案搬移"
     ''');
-        showingLog.value += "渠道$i搬移檔案完成 $appDir/publish/outputs/$folder/$i\n";
+        showingLog.value += "渠道$i搬移檔案完成 $appDir/publish/outputs/$folder/0\n";
       }
     }
 
