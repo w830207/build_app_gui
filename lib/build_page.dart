@@ -115,7 +115,7 @@ class _BuildPageState extends State<BuildPage> {
                 TextButton(
                   onPressed: () =>
                       controller.singleMakeAll(widget.appDir, widget.env),
-                  child: const Text("全渠道打包"),
+                  child: const Text("全一般渠道打包"),
                 ),
 
                 Row(
