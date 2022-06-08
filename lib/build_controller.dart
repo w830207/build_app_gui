@@ -19,6 +19,7 @@ class BuildController extends GetxController {
   final List alphabetUAT = [
     "a",
     "b",
+    "main",
   ];
 
   final List alphabetPROD = [
