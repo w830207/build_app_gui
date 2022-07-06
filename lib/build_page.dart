@@ -23,7 +23,13 @@ class _BuildPageState extends State<BuildPage> {
 
   String channelValue = "a";
 
-  String specialChannelValue = "tt5885t";
+  late String specialChannelValue;
+
+  @override
+  void initState() {
+    super.initState();
+    specialChannelValue = controller.specialChannel.first;
+  }
 
   @override
   Widget build(BuildContext context) {
