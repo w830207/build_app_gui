@@ -185,6 +185,26 @@ class BuildController extends GetxController {
     "66887co",
     "66099co",
     "66299co",
+
+    //0715
+    "aworkgceus",
+    "bnetgfeus",
+    "crouteus",
+    "dprintgtus",
+    "efightkous",
+    "ashutopw",
+    "bfallopw",
+    "cplangopw",
+    "dmainxpw",
+    "edownwpw",
+
+    //0716
+    "500120cz",
+    "500220cz",
+    "500320cz",
+    "500420cz",
+    "500620cz",
+    "500720cz",
   ];
 
   @override
@@ -504,10 +524,19 @@ mkdir -p $appDir/publish/outputs/$folder
 mkdir -p $appDir/publish/outputs/$folder/0
     ''');
       shell = shell.pushd("publish/outputs/$folder/0");
-      await shell.run('''
+
+      if (i == "main") {
+        await shell.run('''
+mv $appDir/build/app/outputs/flutter-apk/app-v2-release.apk ./app-release-v2.apk
+echo "\033[0;32m✔\033[0m 檔案搬移"
+    ''');
+      } else {
+        await shell.run('''
 mv $appDir/build/app/outputs/flutter-apk/app-v2-release.apk ./02399$i-v2.apk
 echo "\033[0;32m✔\033[0m 檔案搬移"
     ''');
+      }
+
       showingLog.value += "渠道$i搬移檔案完成 $appDir/publish/outputs/$folder/0\n";
     }
 
@@ -529,10 +558,17 @@ mkdir -p $appDir/publish/outputs/$folder
 mkdir -p $appDir/publish/outputs/$folder/0
     ''');
       shell = shell.pushd("publish/outputs/$folder/0");
-      await shell.run('''
+      if (i == "main") {
+        await shell.run('''
+mv $appDir/build/app/outputs/flutter-apk/app-v1-release.apk ./app-release.apk
+echo "\033[0;32m✔\033[0m 檔案搬移"
+    ''');
+      } else {
+        await shell.run('''
 mv $appDir/build/app/outputs/flutter-apk/app-v1-release.apk ./02399$i.apk
 echo "\033[0;32m✔\033[0m 檔案搬移"
     ''');
+      }
       showingLog.value += "渠道$i搬移檔案完成 $appDir/publish/outputs/$folder/0\n";
     }
 
