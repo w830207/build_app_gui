@@ -55,7 +55,8 @@ class _BuildPageState extends State<BuildPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 TextButton(
-                    onPressed: () => controller.makeApkKey(widget.appDir),
+                    onPressed: () =>
+                        controller.makeApkKey(widget.appDir, widget.env),
                     child: const Text("0.建立apk key")),
                 TextButton(
                     onPressed: () {
